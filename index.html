@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chef Culina — Ultimate Recipe Library | 2,000 Recipes</title>
+<meta name="description" content="Chef Culina's Ultimate Recipe Library — a premium digital collection of 2,000 recipes for home cooks, food creators, and meal planners. Instant access." />
+<style>
+  /* ---------- Design Tokens ---------- */
+  :root{
+    --cream:#f7efe3;
+    --cream-2:#fbf6ee;
+    --sand:#efe2cf;
+    --caramel:#c8873f;
+    --caramel-deep:#b06d28;
+    --coffee:#6f4a29;
+    --coffee-dark:#3e2a1a;
+    --brown:#2a1c12;
+    --ink:#2b2018;
+    --muted:#7a685a;
+    --gold:#d8a24a;
+    --white:#ffffff;
+    --shadow-sm:0 6px 18px rgba(62,42,26,.10);
+    --shadow-md:0 18px 45px rgba(62,42,26,.16);
+    --shadow-lg:0 35px 80px rgba(42,28,18,.28);
+    --radius:22px;
+    --radius-lg:32px;
+    --maxw:1180px;
+    --serif:"Georgia","Times New Roman",serif;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:90px}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.65;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.serif{font-family:var(--serif)}
+  a{text-decoration:none;color:inherit}
+  img{max-width:100%;display:block}
+  section{position:relative}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    display:inline-block;
+    font-size:.8rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--caramel-deep);
+    background:rgba(200,135,63,.12);
+    padding:8px 16px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    font-size:clamp(1.9rem,4vw,3rem);
+    line-height:1.12;
+    color:var(--coffee-dark);
+    margin-bottom:14px;
+    letter-spacing:-.01em;
+  }
+  .section-sub{
+    color:var(--muted);
+    font-size:1.08rem;
+    max-width:640px;
+  }
+  .center{text-align:center}
+  .center .section-sub{margin:0 auto}
+  .pad{padding:96px 0}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-weight:700;font-size:1rem;
+    padding:16px 30px;border-radius:999px;
+    cursor:pointer;border:none;
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+    will-change:transform;
+  }
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(135deg,var(--caramel),var(--caramel-deep));
+    box-shadow:0 14px 30px rgba(176,109,40,.38);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(176,109,40,.5)}
+  .btn-ghost{
+    color:var(--coffee-dark);
+    background:rgba(255,255,255,.7);
+    border:1.5px solid rgba(111,74,41,.25);
+    backdrop-filter:blur(6px);
+  }
+  .btn-ghost:hover{transform:translateY(-3px);background:#fff;box-shadow:var(--shadow-sm)}
+  .btn-lg{padding:19px 40px;font-size:1.12rem}
+
+  /* ---------- Navigation ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(247,239,227,.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(111,74,41,.10);
+    transition:box-shadow .3s ease, background .3s ease;
+  }
+  header.nav.scrolled{box-shadow:0 8px 30px rgba(62,42,26,.10);background:rgba(247,239,227,.92)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:1.4rem;color:var(--coffee-dark)}
+  .logo .mark{
+    width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--caramel),var(--coffee));
+    color:#fff;font-size:1.1rem;box-shadow:var(--shadow-sm);
+  }
+  .logo span{color:var(--caramel-deep)}
+  .nav-links{display:flex;align-items:center;gap:32px}
+  .nav-links a{font-weight:600;color:var(--coffee-dark);font-size:.98rem;position:relative;padding:4px 0}
+  .nav-links a:not(.btn)::after{
+    content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;
+    background:var(--caramel);transition:width .25s ease;
+  }
+  .nav-links a:not(.btn):hover::after{width:100%}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;font-size:1.6rem;color:var(--coffee-dark)}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:70px 0 100px;
+    background:
+      radial-gradient(1000px 500px at 85% -5%,rgba(216,162,74,.28),transparent 60%),
+      radial-gradient(800px 500px at 0% 20%,rgba(200,135,63,.18),transparent 55%),
+      linear-gradient(180deg,var(--cream-2),var(--cream));
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.3rem,5.2vw,4rem);
+    line-height:1.06;letter-spacing:-.015em;
+    color:var(--coffee-dark);
+    margin-bottom:20px;
+  }
+  .hero h1 .hl{
+    color:var(--caramel-deep);
+    background:linear-gradient(120deg,var(--caramel),var(--gold));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero p.lead{font-size:1.18rem;color:var(--muted);max-width:560px;margin-bottom:30px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:34px}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:560px}
+  .hero-stats .st{
+    background:rgba(255,255,255,.65);
+    border:1px solid rgba(111,74,41,.10);
+    border-radius:16px;padding:14px 12px;text-align:center;
+    backdrop-filter:blur(6px);
+  }
+  .hero-stats .st b{display:block;font-family:var(--serif);font-size:1.05rem;color:var(--coffee-dark);line-height:1.2}
+  .hero-stats .st small{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+  /* Hero right: book + character + badge */
+  .hero-visual{position:relative;display:flex;justify-content:center;align-items:center;min-height:520px}
+
+  /* ---- 3D rotatable book ---- */
+  .book-scene{
+    --w:290px; --h:452px; --d:46px;
+    width:var(--w);height:var(--h);
+    perspective:1700px;
+    cursor:grab;touch-action:none;
+    z-index:2;
+    animation:floatBook 6s ease-in-out infinite;
+  }
+  .book-scene:active{cursor:grabbing}
+  .book-3d{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;
+    transform:rotateX(-6deg) rotateY(-28deg);
+    transition:transform .12s ease-out;
+  }
+  .face{position:absolute;top:50%;left:50%;overflow:hidden;backface-visibility:hidden}
+  .face.front,.face.back{width:var(--w);height:var(--h)}
+  .face.spine,.face.fore{width:var(--d);height:var(--h)}
+  .face.top,.face.bottom{width:var(--w);height:var(--d)}
+  .face img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* Hard covers — square binding edge, rounded outer corners */
+  .face.front{transform:translate(-50%,-50%) translateZ(calc(var(--d)/2));
+    border-radius:2px 8px 8px 2px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.22), 0 0 22px rgba(0,0,0,.18)}
+  .face.back{transform:translate(-50%,-50%) rotateY(180deg) translateZ(calc(var(--d)/2));
+    border-radius:8px 2px 2px 8px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.22), 0 0 22px rgba(0,0,0,.18)}
+  /* glossy diagonal sheen across the cover */
+  .face.front::after,.face.back::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
+    background:linear-gradient(118deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.05) 26%,rgba(255,255,255,0) 45%,rgba(0,0,0,.10) 100%);
+  }
+  /* binding-crease shadow at the spine edge (mirrored for the back cover) */
+  .face.front::before{
+    content:"";position:absolute;top:0;bottom:0;left:0;width:16%;pointer-events:none;z-index:2;
+    background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.10) 45%,transparent);
+  }
+  .face.back::before{
+    content:"";position:absolute;top:0;bottom:0;right:0;width:16%;pointer-events:none;z-index:2;
+    background:linear-gradient(270deg,rgba(0,0,0,.34),rgba(0,0,0,.10) 45%,transparent);
+  }
+
+  /* Spine with raised head/tail bands */
+  .face.spine{transform:translate(-50%,-50%) rotateY(-90deg) translateZ(calc(var(--w)/2));
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.18),transparent 18%,transparent 82%,rgba(0,0,0,.35)),
+      linear-gradient(180deg,var(--coffee) 0 4%,var(--coffee-dark) 4% 6%,var(--brown) 6% 94%,var(--coffee-dark) 94% 96%,var(--coffee) 96%);
+    display:grid;place-items:center;box-shadow:inset 0 0 14px rgba(0,0,0,.5)}
+  .face.spine .spine-text{
+    writing-mode:vertical-rl;text-orientation:mixed;
+    color:var(--gold);font-family:var(--serif);font-weight:700;
+    font-size:.8rem;letter-spacing:.14em;white-space:nowrap;
+    text-shadow:0 1px 2px rgba(0,0,0,.6)}
+
+  /* Page block — fine leaf lines with a soft curved highlight */
+  .face.fore{transform:translate(-50%,-50%) rotateY(90deg) translateZ(calc(var(--w)/2));
+    background:
+      linear-gradient(90deg,rgba(0,0,0,.20),rgba(255,255,255,.5) 12%,rgba(0,0,0,.06) 50%,rgba(255,255,255,.4) 88%,rgba(0,0,0,.20)),
+      repeating-linear-gradient(to bottom,#fbf6ec,#fbf6ec 1px,#ddd0ba 1.6px,#fbf6ec 3px)}
+  .face.top{transform:translate(-50%,-50%) rotateX(90deg) translateZ(calc(var(--h)/2));
+    background:
+      linear-gradient(90deg,rgba(0,0,0,.16),transparent 10%,transparent 90%,rgba(0,0,0,.16)),
+      repeating-linear-gradient(to right,#fbf6ec,#fbf6ec 1px,#ddd0ba 1.6px,#fbf6ec 3px)}
+  .face.bottom{transform:translate(-50%,-50%) rotateX(-90deg) translateZ(calc(var(--h)/2));
+    background:
+      linear-gradient(90deg,rgba(0,0,0,.16),transparent 10%,transparent 90%,rgba(0,0,0,.16)),
+      repeating-linear-gradient(to right,#fbf6ec,#fbf6ec 1px,#ddd0ba 1.6px,#fbf6ec 3px)}
+
+  .book-shadow{
+    position:absolute;left:50%;bottom:-7%;transform:translateX(-50%);
+    width:66%;height:46px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(42,28,18,.5),rgba(42,28,18,.22) 45%,transparent 72%);
+    filter:blur(9px);z-index:0;
+  }
+  .drag-hint{
+    position:absolute;left:50%;bottom:-30px;transform:translateX(-50%);
+    color:var(--muted);font-size:.82rem;letter-spacing:.03em;white-space:nowrap;
+    display:flex;align-items:center;gap:7px;opacity:.9;
+  }
+  @keyframes floatBook{0%,100%{translate:0 0}50%{translate:0 -14px}}
+
+  /* Character cropped from the pose sheet (5 cols x 2 rows) */
+  .chef{
+    position:absolute;left:-6%;bottom:-30px;
+    width:230px;height:340px;
+    background-image:url("character.png");
+    background-repeat:no-repeat;
+    background-size:500% 200%;      /* 5 columns, 2 rows */
+    background-position:100% 0%;    /* top-right cell: waist-up portrait */
+    border-radius:20px;
+    filter:drop-shadow(0 20px 30px rgba(42,28,18,.28));
+    animation:floatChef 7s ease-in-out infinite;
+    z-index:1;
+    -webkit-mask-image:linear-gradient(180deg,#000 78%,transparent 100%);
+    mask-image:linear-gradient(180deg,#000 78%,transparent 100%);
+  }
+  @keyframes floatChef{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+  /* Big 70k badge */
+  .badge70{
+    position:absolute;top:-6px;right:-6px;z-index:5;
+    width:150px;height:150px;border-radius:50%;
+    display:grid;place-items:center;text-align:center;
+    color:#fff;
+    background:radial-gradient(circle at 35% 30%,var(--gold),var(--caramel-deep));
+    box-shadow:0 20px 40px rgba(176,109,40,.5),inset 0 0 0 6px rgba(255,255,255,.25);
+    animation:pulseBadge 3s ease-in-out infinite;
+  }
+  .badge70 b{font-family:var(--serif);font-size:1.9rem;line-height:1;display:block}
+  .badge70 small{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;opacity:.95}
+  @keyframes pulseBadge{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+  /* ---------- 2K Counter band ---------- */
+  .counter-band{
+    background:linear-gradient(135deg,var(--coffee-dark),var(--brown));
+    color:var(--cream);
+    padding:60px 0;
+    text-align:center;
+  }
+  .counter-band .num{
+    font-family:var(--serif);
+    font-size:clamp(3.4rem,11vw,7rem);
+    line-height:1;
+    background:linear-gradient(120deg,var(--gold),#f3d69a,var(--caramel));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    letter-spacing:.01em;
+  }
+  .counter-band .plus{font-size:.5em;vertical-align:super;color:var(--gold);-webkit-text-fill-color:var(--gold)}
+  .counter-band p{opacity:.85;font-size:1.15rem;margin-top:8px;letter-spacing:.04em}
+
+  /* ---------- Problem / Solution ---------- */
+  .ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:44px}
+  .ps-card{
+    border-radius:var(--radius);padding:40px 36px;box-shadow:var(--shadow-sm);
+    border:1px solid rgba(111,74,41,.10);
+  }
+  .ps-card.prob{background:#fff}
+  .ps-card.sol{background:linear-gradient(160deg,var(--coffee-dark),var(--coffee));color:var(--cream)}
+  .ps-card .tag{font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;display:inline-block}
+  .ps-card.prob .tag{color:#c0392b}
+  .ps-card.sol .tag{color:var(--gold)}
+  .ps-card h3{font-size:1.6rem;margin-bottom:14px;line-height:1.25}
+  .ps-card ul{list-style:none;margin-top:16px}
+  .ps-card li{padding-left:30px;position:relative;margin-bottom:10px}
+  .ps-card.prob li::before{content:"✕";position:absolute;left:0;color:#c0392b;font-weight:700}
+  .ps-card.sol li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+
+  /* ---------- Grid cards (Inside / Features) ---------- */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:48px}
+  .card{
+    background:#fff;border-radius:var(--radius);padding:30px 26px;
+    border:1px solid rgba(111,74,41,.09);box-shadow:var(--shadow-sm);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{transform:translateY(-8px);box-shadow:var(--shadow-md)}
+  .card .ico{
+    width:100%;height:150px;border-radius:16px;overflow:hidden;margin-bottom:18px;
+    background:linear-gradient(135deg,rgba(216,162,74,.22),rgba(200,135,63,.18));
+  }
+  .card .ico img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+  .card:hover .ico img{transform:scale(1.06)}
+  .card h3{font-size:1.18rem;color:var(--coffee-dark);margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.96rem}
+
+  .inside{background:linear-gradient(180deg,var(--cream),var(--sand))}
+
+  .features .cards{grid-template-columns:repeat(3,1fr)}
+  .feature{
+    display:flex;gap:18px;align-items:flex-start;background:#fff;
+    border-radius:var(--radius);padding:26px;border:1px solid rgba(111,74,41,.09);
+    box-shadow:var(--shadow-sm);transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .feature:hover{transform:translateY(-6px);box-shadow:var(--shadow-md)}
+  .feature .ico{flex:0 0 auto;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;background:linear-gradient(135deg,var(--caramel),var(--coffee));color:#fff}
+  .feature h3{font-size:1.1rem;color:var(--coffee-dark);margin-bottom:4px}
+  .feature p{color:var(--muted);font-size:.94rem}
+
+  /* ---------- Preview ---------- */
+  .preview{background:linear-gradient(180deg,var(--sand),var(--cream))}
+  .recipe-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  .recipe{
+    background:#fff;border-radius:var(--radius);overflow:hidden;
+    border:1px solid rgba(111,74,41,.09);box-shadow:var(--shadow-sm);
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .recipe:hover{transform:translateY(-10px) scale(1.01);box-shadow:var(--shadow-lg)}
+  .recipe .thumb{height:170px;position:relative;overflow:hidden}
+  .recipe .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.28))}
+  .recipe .thumb a{position:absolute;inset:0;z-index:1;display:block;cursor:pointer}
+  .recipe .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .recipe:hover .thumb img{transform:scale(1.07)}
+  .recipe .pill{position:absolute;top:14px;left:14px;z-index:2;background:rgba(255,255,255,.9);color:var(--coffee-dark);font-size:.72rem;font-weight:700;padding:6px 12px;border-radius:999px;letter-spacing:.04em}
+  .recipe .body{padding:20px 22px}
+  .recipe h3{font-size:1.2rem;color:var(--coffee-dark);margin-bottom:6px}
+  .recipe .meta{display:flex;gap:16px;color:var(--muted);font-size:.85rem;margin-top:10px}
+  .r1{background:linear-gradient(135deg,#e8c39a,#c8873f)}
+  .r2{background:linear-gradient(135deg,#f0b27a,#d35400)}
+  .r3{background:linear-gradient(135deg,#c86b4a,#7b3f1d)}
+  .r4{background:linear-gradient(135deg,#f4a3b6,#c0392b)}
+  .r5{background:linear-gradient(135deg,#cfe0a3,#7d9b3a)}
+  .r6{background:linear-gradient(135deg,#d9b18c,#6f4a29)}
+
+  /* ---------- Story / Character showcase ---------- */
+  .story{background:linear-gradient(180deg,var(--cream),var(--cream-2))}
+  .story-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:center}
+  .story .figure{
+    border-radius:var(--radius-lg);
+    aspect-ratio:1/1;width:100%;overflow:hidden;
+    border:6px solid #fff;box-shadow:var(--shadow-md);
+    background:var(--sand);
+  }
+  .story .figure img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+  .story .figure:hover img{transform:scale(1.04)}
+
+  /* ---------- Offer ---------- */
+  .offer{background:linear-gradient(160deg,var(--coffee-dark),var(--brown));color:var(--cream)}
+  .offer-card{
+    max-width:760px;margin:0 auto;text-align:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border:1px solid rgba(216,162,74,.35);
+    border-radius:var(--radius-lg);
+    padding:56px 40px;
+    position:relative;
+    box-shadow:var(--shadow-lg);
+  }
+  .promo-badge{
+    position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(135deg,#e74c3c,#c0392b);
+    color:#fff;font-weight:800;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:10px 22px;border-radius:999px;box-shadow:0 10px 24px rgba(192,57,43,.5);
+    animation:pulseBadge 2.4s ease-in-out infinite;
+  }
+  .offer-card h2{font-size:clamp(1.8rem,4vw,2.7rem);color:#fff;margin:14px 0 10px}
+  .offer-card .price{margin:26px 0}
+  .offer-card .price .now{font-family:var(--serif);font-size:4rem;color:var(--gold);line-height:1}
+  .offer-card .price .was{font-size:1.4rem;color:rgba(247,239,227,.55);text-decoration:line-through;margin-left:10px}
+  .offer-card .price small{display:block;color:rgba(247,239,227,.7);margin-top:6px}
+  .trust{margin-top:22px;color:rgba(247,239,227,.75);font-size:.95rem}
+  .trust b{color:var(--gold)}
+
+  /* ---------- FAQ ---------- */
+  .faq-list{max-width:800px;margin:44px auto 0}
+  .faq-item{
+    background:#fff;border:1px solid rgba(111,74,41,.1);border-radius:16px;
+    margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm);
+  }
+  .faq-q{
+    width:100%;text-align:left;background:none;border:none;cursor:pointer;
+    padding:22px 24px;font-size:1.08rem;font-weight:700;color:var(--coffee-dark);
+    display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--serif);
+  }
+  .faq-q .plus{font-size:1.5rem;color:var(--caramel-deep);transition:transform .3s ease;flex:0 0 auto}
+  .faq-item.open .faq-q .plus{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .faq-a p{padding:0 24px 22px;color:var(--muted)}
+
+  /* ---------- Final CTA ---------- */
+  .final{
+    text-align:center;padding:90px 0;
+    background:radial-gradient(700px 300px at 50% 0%,rgba(216,162,74,.25),transparent 60%),var(--cream);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--brown);color:rgba(247,239,227,.8);padding:56px 0 28px}
+  .foot-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  footer .logo{color:#fff}
+  footer p{max-width:340px;margin-top:12px;font-size:.95rem}
+  .foot-links{display:flex;gap:40px;flex-wrap:wrap}
+  .foot-col h4{color:var(--gold);font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+  .foot-col a{display:block;margin-bottom:9px;font-size:.95rem;transition:color .2s}
+  .foot-col a:hover{color:#fff}
+  .copyright{margin-top:40px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);text-align:center;font-size:.88rem;opacity:.7}
+
+  /* ---------- Reveal animation ---------- */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:960px){
+    .hero-grid{grid-template-columns:1fr;text-align:center}
+    .hero-cta{justify-content:center}
+    .hero-stats{margin:0 auto}
+    .hero p.lead{margin-left:auto;margin-right:auto}
+    .hero-visual{margin-top:30px;min-height:480px}
+    .ps-grid{grid-template-columns:1fr}
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .features .cards{grid-template-columns:repeat(2,1fr)}
+    .recipe-cards{grid-template-columns:repeat(2,1fr)}
+    .story-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:640px){
+    .pad{padding:64px 0}
+    .nav-links{
+      position:fixed;top:74px;right:0;height:calc(100vh - 74px);width:74%;
+      flex-direction:column;align-items:flex-start;gap:6px;
+      background:var(--cream-2);padding:30px 28px;
+      transform:translateX(110%);transition:transform .35s ease;
+      box-shadow:-20px 0 50px rgba(42,28,18,.2);
+    }
+    .nav-links.open{transform:none}
+    .nav-links a{width:100%;padding:12px 0;font-size:1.1rem}
+    .nav-toggle{display:block}
+    .cards,.features .cards,.recipe-cards{grid-template-columns:1fr}
+    .hero-stats{grid-template-columns:repeat(2,1fr)}
+    .chef{width:170px;height:250px;left:0}
+    .badge70{width:120px;height:120px}
+    .badge70 b{font-size:1.5rem}
+    .book-scene{--w:230px;--h:358px;--d:38px}
+    .offer-card{padding:48px 22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo"><span class="mark">🍴</span>Chef&nbsp;<span>Culina</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#why">Why</a>
+      <a href="#inside">Inside</a>
+      <a href="#preview">Preview</a>
+      <a href="#faq">FAQ</a>
+      <a href="#offer" class="btn btn-primary" style="padding:11px 24px">Buy Now</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Premium Digital Recipe Library</span>
+      <h1>Chef Culina's <span class="hl">Ultimate Recipe Library</span></h1>
+      <p class="lead">Unlock a premium digital collection of <b>2,000 recipes</b> made for home cooks, food creators, meal planners, and recipe lovers.</p>
+      <div class="hero-cta">
+        <a href="#offer" class="btn btn-primary btn-lg">Get Instant Access →</a>
+        <a href="#inside" class="btn btn-ghost btn-lg">See What's Inside</a>
+      </div>
+      <div class="hero-stats">
+        <div class="st"><b>2,000</b><small>Recipes</small></div>
+        <div class="st"><b>Instant</b><small>Digital Access</small></div>
+        <div class="st"><b>Organized</b><small>Categories</small></div>
+        <div class="st"><b>Any Device</b><small>Mobile-Friendly</small></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="badge70" title="2,000 recipes">
+        <div><b>2K</b><small>Recipes</small></div>
+      </div>
+      <div class="chef" role="img" aria-label="Chef Culina character"></div>
+      <div class="book-shadow"></div>
+      <div class="book-scene" id="bookScene">
+        <div class="book-3d" id="book3d">
+          <div class="face front"><img src="front.png" alt="Chef Culina's Secret Recipes front cover" /></div>
+          <div class="face back"><img src="back.png" alt="Chef Culina's Secret Recipes back cover" /></div>
+          <div class="face spine"><span class="spine-text">Chef Culina · Secret Recipes</span></div>
+          <div class="face fore"></div>
+          <div class="face top"></div>
+          <div class="face bottom"></div>
+        </div>
+        <div class="drag-hint">✋ Drag to spin the book</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2K COUNTER BAND ============ -->
+<section class="counter-band">
+  <div class="wrap">
+    <div class="num"><span id="counter">0</span><span class="plus">+</span></div>
+    <p>Chef-approved recipes ready to cook tonight — all in one library.</p>
+  </div>
+</section>
+
+<!-- ============ WHY (PROBLEM / SOLUTION) ============ -->
+<section class="pad" id="why">
+  <div class="wrap center reveal">
+    <span class="eyebrow">Why Chef Culina</span>
+    <h2 class="section-title">Cooking should feel inspiring — not overwhelming</h2>
+    <p class="section-sub">Endless tabs, blocked paywalls, and 10-minute life stories before the actual recipe. There's a better way.</p>
+  </div>
+  <div class="wrap ps-grid">
+    <div class="ps-card prob reveal">
+      <span class="tag">The Problem</span>
+      <h3>Stop wasting time searching random recipes online</h3>
+      <ul>
+        <li>Scrolling endlessly through cluttered, ad-heavy websites</li>
+        <li>Recipes that never taste the way they look</li>
+        <li>No structure — nothing saved, nothing organized</li>
+        <li>Paywalls and pop-ups interrupting every step</li>
+      </ul>
+    </div>
+    <div class="ps-card sol reveal">
+      <span class="tag">The Solution</span>
+      <h3>Chef Culina gives you one organized recipe library</h3>
+      <ul>
+        <li>2,000 recipes neatly sorted by category & meal</li>
+        <li>Clear, beginner-friendly, tested instructions</li>
+        <li>Search instantly for exactly what you're craving</li>
+        <li>No ads, no pop-ups — just great food, forever yours</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSIDE ============ -->
+<section class="pad inside" id="inside">
+  <div class="wrap center reveal">
+    <span class="eyebrow">What's Inside</span>
+    <h2 class="section-title">Every meal, every craving, every occasion</h2>
+    <p class="section-sub">A complete kitchen companion organized into delicious, easy-to-browse categories.</p>
+  </div>
+  <div class="wrap cards">
+    <div class="card reveal"><div class="ico"><img src="images/001_Breakfast-Avocado-Toast.png" alt="Breakfast" loading="lazy"></div><h3>Breakfast</h3><p>Energizing morning meals from quick bowls to weekend brunch classics.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/002_Lunch-Chicken-Caesar-Salad.png" alt="Lunch" loading="lazy"></div><h3>Lunch</h3><p>Fresh, satisfying midday plates that keep you fueled and focused.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/003_Dinner-Beef-Stroganoff.png" alt="Dinner" loading="lazy"></div><h3>Dinner</h3><p>Comforting family favorites and restaurant-style mains for any night.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/004_Dessert-Chocolate-Lava-Cake.png" alt="Desserts" loading="lazy"></div><h3>Desserts</h3><p>Cakes, cookies, and sweet treats to end every meal on a high note.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/005_Drink-Mango-Smoothie.png" alt="Drinks" loading="lazy"></div><h3>Drinks</h3><p>Smoothies, lattes, mocktails, and refreshers for every mood.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/006_Sauce-Dressing-Honey-Mustard-Dressing.png" alt="Sauces and dressings" loading="lazy"></div><h3>Sauces & Dressings</h3><p>Signature sauces and dressings that upgrade any dish instantly.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/007_Healthy-Meal-Grilled-Salmon-with-Quinoa-and-Vegeta.png" alt="Healthy meals" loading="lazy"></div><h3>Healthy Meals</h3><p>Balanced, nourishing recipes that never sacrifice flavor.</p></div>
+    <div class="card reveal"><div class="ico"><img src="images/008_Party-Food-Buffalo-Chicken-Sliders.png" alt="Party foods" loading="lazy"></div><h3>Party Foods</h3><p>Crowd-pleasing appetizers and shareables for every celebration.</p></div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="pad features">
+  <div class="wrap center reveal">
+    <span class="eyebrow">Built For Real Kitchens</span>
+    <h2 class="section-title">Everything you need to cook with confidence</h2>
+    <p class="section-sub">Designed to make you a better, faster, more inspired home cook.</p>
+  </div>
+  <div class="wrap cards">
+    <div class="feature reveal"><div class="ico">🔍</div><div><h3>Searchable Library</h3><p>Find any recipe in seconds by name, ingredient, or category.</p></div></div>
+    <div class="feature reveal"><div class="ico">📖</div><div><h3>Beginner-Friendly</h3><p>Simple, step-by-step instructions anyone can follow.</p></div></div>
+    <div class="feature reveal"><div class="ico">📅</div><div><h3>Meal Prep Ideas</h3><p>Plan your week and cook smarter with prep-ready recipes.</p></div></div>
+    <div class="feature reveal"><div class="ico">👨‍👩‍👧‍👦</div><div><h3>Family Dinner Inspiration</h3><p>Wholesome meals the whole table will love.</p></div></div>
+    <div class="feature reveal"><div class="ico">⭐</div><div><h3>Restaurant-Style at Home</h3><p>Recreate your favorite dishes without leaving your kitchen.</p></div></div>
+    <div class="feature reveal"><div class="ico">📱</div><div><h3>Works Everywhere</h3><p>Phone, tablet, laptop, and desktop — access anytime, anywhere.</p></div></div>
+  </div>
+</section>
+
+<!-- ============ PREVIEW ============ -->
+<section class="pad preview" id="preview">
+  <div class="wrap center reveal">
+    <span class="eyebrow">A Taste Of What's Inside</span>
+    <h2 class="section-title">Preview real recipes from the library</h2>
+    <p class="section-sub">Just a small sample of the 2,000 recipes waiting for you.</p>
+  </div>
+  <div class="wrap recipe-cards">
+    <div class="recipe reveal">
+      <div class="thumb r1"><span class="pill">Dinner</span><a href="ingredients/1.png" title="View ingredients"><img src="menu/009_Creamy-Garlic-Chicken.png" alt="Creamy Garlic Chicken" loading="lazy"></a></div>
+      <div class="body"><h3>Creamy Garlic Chicken</h3><p style="color:var(--muted);font-size:.95rem">Juicy chicken in a rich, velvety garlic cream sauce.</p><div class="meta"><span>⏱ 30 min</span><span>🔥 Easy</span></div></div>
+    </div>
+    <div class="recipe reveal">
+      <div class="thumb r2"><span class="pill">Seafood</span><a href="ingredients/2.png" title="View ingredients"><img src="menu/010_Honey-Butter-Salmon.png" alt="Honey Butter Salmon" loading="lazy"></a></div>
+      <div class="body"><h3>Honey Butter Salmon</h3><p style="color:var(--muted);font-size:.95rem">Flaky salmon glazed in sweet honey butter perfection.</p><div class="meta"><span>⏱ 25 min</span><span>🔥 Easy</span></div></div>
+    </div>
+    <div class="recipe reveal">
+      <div class="thumb r3"><span class="pill">Dinner</span><a href="ingredients/3.png" title="View ingredients"><img src="menu/011_Classic-Beef-Lasagna.png" alt="Classic Beef Lasagna" loading="lazy"></a></div>
+      <div class="body"><h3>Classic Beef Lasagna</h3><p style="color:var(--muted);font-size:.95rem">Layers of pasta, hearty beef, and bubbling cheese.</p><div class="meta"><span>⏱ 60 min</span><span>🔥 Medium</span></div></div>
+    </div>
+    <div class="recipe reveal">
+      <div class="thumb r4"><span class="pill">Dessert</span><a href="ingredients/4.png" title="View ingredients"><img src="menu/012_Strawberry-Cheesecake-Cups.png" alt="Strawberry Cheesecake Cups" loading="lazy"></a></div>
+      <div class="body"><h3>Strawberry Cheesecake Cups</h3><p style="color:var(--muted);font-size:.95rem">Creamy no-bake cups topped with fresh strawberries.</p><div class="meta"><span>⏱ 20 min</span><span>🔥 Easy</span></div></div>
+    </div>
+    <div class="recipe reveal">
+      <div class="thumb r5"><span class="pill">Sauce</span><a href="ingredients/5.png" title="View ingredients"><img src="menu/013_Homemade-Ranch-Dressing.png" alt="Homemade Ranch Dressing" loading="lazy"></a></div>
+      <div class="body"><h3>Homemade Ranch Dressing</h3><p style="color:var(--muted);font-size:.95rem">Cool, herby, creamy ranch better than store-bought.</p><div class="meta"><span>⏱ 10 min</span><span>🔥 Easy</span></div></div>
+    </div>
+    <div class="recipe reveal">
+      <div class="thumb r6"><span class="pill">Drink</span><a href="ingredients/6.png" title="View ingredients"><img src="menu/014_Iced-Caramel-Latte.png" alt="Iced Caramel Latte" loading="lazy"></a></div>
+      <div class="body"><h3>Iced Caramel Latte</h3><p style="color:var(--muted);font-size:.95rem">Café-style caramel latte you can make at home.</p><div class="meta"><span>⏱ 5 min</span><span>🔥 Easy</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORY / CHARACTER ============ -->
+<section class="pad story">
+  <div class="wrap story-grid">
+    <div class="reveal">
+      <div class="figure"><img src="charkitch.png" alt="Chef Culina in her kitchen" loading="lazy" /></div>
+    </div>
+    <div class="reveal">
+      <span class="eyebrow">Meet Your Guide</span>
+      <h2 class="section-title">Cook alongside Chef Culina</h2>
+      <p class="section-sub" style="margin-bottom:18px">From the first pinch of salt to the final plating, Chef Culina walks you through every recipe with warmth, clarity, and a genuine love for good food.</p>
+      <p style="color:var(--muted)">Whether you're a total beginner or a weekend food creator, this library was crafted to make cooking feel joyful, simple, and endlessly delicious — one recipe at a time.</p>
+      <a href="#offer" class="btn btn-primary btn-lg" style="margin-top:26px">Start Cooking Today →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OFFER ============ -->
+<section class="pad offer" id="offer">
+  <div class="wrap reveal">
+    <div class="offer-card">
+      <span class="promo-badge">🔥 Limited Time Offer</span>
+      <span class="eyebrow" style="background:rgba(216,162,74,.18);color:var(--gold)">Complete Digital Bundle</span>
+      <h2>Get 2,000 Recipes in One Premium Digital Library</h2>
+      <p style="color:rgba(247,239,227,.8);max-width:520px;margin:0 auto">Lifetime access to the entire collection — instantly delivered, beautifully organized, and yours forever.</p>
+      <div class="price">
+        <span class="now">$8.99</span><span class="was">$49.99</span>
+        <small>One-time payment • No subscription</small>
+      </div>
+      <a href="https://payhip.com/b/Yi3NU" class="btn btn-primary btn-lg" style="font-size:1.2rem;padding:20px 48px">Buy Now →</a>
+      <p class="trust">🔒 <b>Secure checkout</b> • ⚡ <b>Instant download</b> • 📦 <b>No shipping needed</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="pad" id="faq">
+  <div class="wrap center reveal">
+    <span class="eyebrow">Questions & Answers</span>
+    <h2 class="section-title">Frequently asked questions</h2>
+    <p class="section-sub">Everything you need to know before getting instant access.</p>
+  </div>
+  <div class="wrap faq-list">
+    <div class="faq-item">
+      <button class="faq-q">Is this a physical book?<span class="plus">+</span></button>
+      <div class="faq-a"><p>No — Chef Culina is a 100% digital recipe library. There's nothing to ship and nothing to wait for. You get instant access the moment you purchase.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How do I receive it?<span class="plus">+</span></button>
+      <div class="faq-a"><p>Right after checkout, you'll receive an instant download link (and email) to access your complete recipe library. It's ready to use in minutes.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can I use it on my phone?<span class="plus">+</span></button>
+      <div class="faq-a"><p>Absolutely. The library is fully mobile-friendly and works beautifully on your phone, tablet, laptop, and desktop — cook from anywhere.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Are the recipes organized?<span class="plus">+</span></button>
+      <div class="faq-a"><p>Yes! Every recipe is neatly sorted into clear categories — breakfast, lunch, dinner, desserts, drinks, sauces, healthy meals, party foods, and more — plus instant search.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is it beginner friendly?<span class="plus">+</span></button>
+      <div class="faq-a"><p>Definitely. Every recipe uses simple, step-by-step instructions written for real home cooks — no professional experience required.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final">
+  <div class="wrap reveal">
+    <span class="eyebrow">Your Kitchen, Upgraded</span>
+    <h2 class="section-title">2,000 recipes are one click away</h2>
+    <p class="section-sub" style="margin:0 auto 30px">Join the home cooks discovering something delicious every single day.</p>
+    <a href="#offer" class="btn btn-primary btn-lg">Get Instant Access →</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="logo"><span class="mark">🍴</span>Chef&nbsp;<span style="color:var(--gold)">Culina</span></div>
+      <p>Your premium digital recipe library for everyday cooking — 2,000 recipes made for real home kitchens.</p>
+    </div>
+    <div class="foot-links">
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#why">Why Chef Culina</a>
+        <a href="#inside">What's Inside</a>
+        <a href="#preview">Recipe Preview</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h4>Get Started</h4>
+        <a href="#offer">Buy Now</a>
+        <a href="#top">Back to Top</a>
+        <a href="#">Instant Access</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    © 2026 Chef Culina. All rights reserved. • Digital recipe library for everyday cooking.
+  </div>
+</footer>
+
+<script>
+  /* ---- Sticky nav shadow ---- */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* ---- Mobile menu ---- */
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+
+  /* ---- Animated 2,000 counter ---- */
+  const counter = document.getElementById('counter');
+  let counted = false;
+  function runCounter(){
+    const target = 2000, dur = 2000, start = performance.now();
+    function tick(now){
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      counter.textContent = Math.floor(eased * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+      else counter.textContent = target.toLocaleString();
+    }
+    requestAnimationFrame(tick);
+  }
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting && !counted){ counted = true; runCounter(); } });
+  }, {threshold:.4});
+  counterObs.observe(counter);
+
+  /* ---- Reveal on scroll ---- */
+  const revObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); } });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+  /* ---- FAQ accordion ---- */
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-a').style.maxHeight = null;
+      });
+      if (!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+    });
+  });
+
+  /* ---- 3D book: drag to rotate 360° (both axes) + idle auto-spin ---- */
+  (function(){
+    const scene = document.getElementById('bookScene');
+    const book3d = document.getElementById('book3d');
+    if (!scene || !book3d) return;
+
+    let rx = -6, ry = -28;          // current rotation (degrees)
+    let dragging = false, autoOn = true;
+    let lastX = 0, lastY = 0, resumeTimer = null;
+
+    function apply(){ book3d.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; }
+
+    function onDown(e){
+      dragging = true; autoOn = false;
+      book3d.style.transition = 'none';
+      const p = e.touches ? e.touches[0] : e;
+      lastX = p.clientX; lastY = p.clientY;
+      clearTimeout(resumeTimer);
+      if (e.cancelable) e.preventDefault();
+    }
+    function onMove(e){
+      if (!dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      const dx = p.clientX - lastX, dy = p.clientY - lastY;
+      ry += dx * 0.5;              // left/right → Y axis
+      rx -= dy * 0.5;             // up/down → X axis
+      lastX = p.clientX; lastY = p.clientY;
+      apply();
+      if (e.cancelable) e.preventDefault();
+    }
+    function onUp(){
+      if (!dragging) return;
+      dragging = false;
+      book3d.style.transition = 'transform .12s ease-out';
+      resumeTimer = setTimeout(() => { autoOn = true; }, 3500);
+    }
+
+    scene.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    scene.addEventListener('touchstart', onDown, {passive:false});
+    window.addEventListener('touchmove', onMove, {passive:false});
+    window.addEventListener('touchend', onUp);
+
+    function loop(){
+      if (autoOn && !dragging){ ry += 0.22; apply(); }  // gentle idle spin
+      requestAnimationFrame(loop);
+    }
+    apply();
+    requestAnimationFrame(loop);
+  })();
+</script>
+</body>
+</html>
